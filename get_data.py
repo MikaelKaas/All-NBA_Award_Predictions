@@ -4,12 +4,11 @@ from nba_api.stats.library.parameters import SeasonType
 
 # year interval we want to collect data from (2023 means the 2023-24 season)
 FIRST_YEAR = 1996 # nba_api game logs only go back to 1996 (this is completely fine, will explain in report)
-LAST_YEAR = 2023
-# directory name (directory must already exist)
+LAST_YEAR = 2022 # unfortunately can't collect data for 2023-24 yet (season ends Apr 14th)
+# output directory name (directory must already exist)
 OUT_DIRECTORY = 'data/raw'
 # string for logging purposes
 SEPERATOR = '-------------------------------------'
-
 
 def main():
     # create list of seaons from FIRST_YEAR to LAST_YEAR
