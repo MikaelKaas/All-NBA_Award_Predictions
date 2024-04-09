@@ -20,7 +20,7 @@ def main():
     print(SEPERATOR + '\nGetting regular season player data\n' + SEPERATOR)
     regularSeasonPlayerData = get_data(leaguedashplayerstats.LeagueDashPlayerStats, seasons, getAdvancedStats=True, key='PLAYER_ID')
     print('exporting player data')
-    regularSeasonPlayerData.to_csv(OUT_DIRECTORY + '/player_stats_.csv')
+    regularSeasonPlayerData.to_csv(OUT_DIRECTORY + '/player_stats.csv')
     
     # get team stats
     print(SEPERATOR + '\nGetting regular season team data\n' + SEPERATOR)
