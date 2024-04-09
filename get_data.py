@@ -5,7 +5,7 @@ from nba_api.stats.endpoints import leaguegamelog, leaguedashplayerstats, league
 FIRST_YEAR = 1996 # nba_api game logs only go back to 1996 (this is completely fine, will explain in report)
 LAST_YEAR = 2023
 # output directory name (directory must already exist)
-OUT_DIRECTORY = 'data/raw'
+OUT_DIRECTORY = 'data/raw/'
 # string for logging purposes
 SEPERATOR = '-------------------------------------'
 
@@ -20,19 +20,19 @@ def main():
     print(SEPERATOR + '\nGetting regular season player data\n' + SEPERATOR)
     regularSeasonPlayerData = get_data(leaguedashplayerstats.LeagueDashPlayerStats, seasons, getAdvancedStats=True, key='PLAYER_ID')
     print('exporting player data')
-    regularSeasonPlayerData.to_csv(OUT_DIRECTORY + '/player_stats.csv')
+    regularSeasonPlayerData.to_csv(OUT_DIRECTORY + 'player_stats.csv')
     
     # get team stats
     print(SEPERATOR + '\nGetting regular season team data\n' + SEPERATOR)
     regularSeasonTeamData = get_data(leaguedashteamstats.LeagueDashTeamStats, seasons, getAdvancedStats=True, key='TEAM_ID')
     print('exporting team data')
-    regularSeasonTeamData.to_csv(OUT_DIRECTORY + '/team_stats.csv')
+    regularSeasonTeamData.to_csv(OUT_DIRECTORY + 'team_stats.csv')
 
     # get game logs
     print(SEPERATOR + '\nGetting regular season game logs\n' + SEPERATOR)
     regularSeasonGameLogs = get_data(leaguegamelog.LeagueGameLog, seasons)
     print('exporting game logs')
-    regularSeasonGameLogs.to_csv(OUT_DIRECTORY + '/game_logs.csv')
+    regularSeasonGameLogs.to_csv(OUT_DIRECTORY + 'game_logs.csv')
 
 
 # get a dataframe of data from an endpoint for every season in seasons[]
