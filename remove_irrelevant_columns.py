@@ -17,7 +17,7 @@ PLAYER_STATS_COLS = [
     'GP',
     'W',
     'L',
-    # W_PCT
+    'W_PCT',
     'MIN',
     'FGM',
     'FGA',
@@ -46,15 +46,15 @@ PLAYER_STATS_COLS = [
     'AST_PCT',
     'AST_TO',
     'AST_RATIO',
-    # OREB_PCT
-    # DREB_PCT
-    # REB_PCT
+    'OREB_PCT',
+    'DREB_PCT',
+    'REB_PCT',
     'TM_TOV_PCT',
     'EFG_PCT',
     'TS_PCT',
     'USG_PCT',
     'PACE',
-    # PACE_PER40
+    'PACE_PER40',
     'PIE',
     'POSS',
     'FGM_PG',
@@ -69,7 +69,7 @@ TEAM_STATS_COLS = [
     'GP',
     'W',
     'L',
-    # W_PCT
+    'W_PCT',
     'MIN',
     'FGM',
     'FGA',
@@ -105,7 +105,7 @@ TEAM_STATS_COLS = [
     'EFG_PCT',
     'TS_PCT',
     'PACE',
-    # PACE_PER40
+    'PACE_PER40',
     'POSS',
     'PIE'
 ]
