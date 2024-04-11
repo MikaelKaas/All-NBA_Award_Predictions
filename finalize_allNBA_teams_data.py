@@ -1,26 +1,13 @@
-# combine and filter down data to only columns we want
-# create seperate 2022-2023 file
-# remove invalid players from data (not enough GP...)
-# deal with potential NaN values?
 import pandas as pd
 import unicodedata
 
-IN_DIRECTORY = 'data/clean/'
+IN_DIRECTORY = 'data/'
 OUT_DIRECTORY = 'data/final/'
 
 def main():
-    playerStats = pd.read_csv(IN_DIRECTORY + 'player_stats_clean.csv')
-    additionalStats = pd.read_csv(IN_DIRECTORY + 'additional_player_stats.csv')
-
-
-    # merge...
-
-    # clean...
-
-
     # finalize All-NBA team award winner data
     # this data was pulled from: https://www.basketball-reference.com/awards/all_league.html
-    allNBAteams = pd.read_csv('data/all-nba_teams.csv')
+    allNBAteams = pd.read_csv(IN_DIRECTORY + 'allNBA_teams.csv')
     
     # remove irrelevant seasons
     allNBAteams = allNBAteams.drop(allNBAteams[allNBAteams['Season'] < '1996-97'].index)
@@ -60,7 +47,7 @@ def main():
     allNBAteamsFinal = allNBAteamsFinal.rename(columns={'Season' : 'SEASON', 'Team' : 'ALL_NBA_TM'})
     allNBAteamsFinal = allNBAteamsFinal.sort_values(by=['SEASON', 'ALL_NBA_TM', 'PLAYER_NAME']).set_index('SEASON')
 
-    allNBAteamsFinal.to_csv(OUT_DIRECTORY + 'all-nba_teams_final.csv')
+    allNBAteamsFinal.to_csv(OUT_DIRECTORY + 'allNBA_teams_final.csv')
 
 
 # remove position suffix from PLAYER_NAME column and normalize accented letters
