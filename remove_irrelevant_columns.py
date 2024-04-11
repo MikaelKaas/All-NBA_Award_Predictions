@@ -110,43 +110,9 @@ TEAM_STATS_COLS = [
     'PIE'
 ]
 
-# game_logs columns to keep
-GAME_LOGS_COLS = [
-    'SEASON',
-    'SEASON_ID',
-    'TEAM_ID',
-    'TEAM_ABBREVIATION',
-    'TEAM_NAME',
-    'GAME_ID',
-    'GAME_DATE',
-    # MATCHUP
-    'WL',
-    'MIN',
-    'FGM',
-    'FGA',
-    'FG_PCT',
-    'FG3M',
-    'FG3A',
-    'FG3_PCT',
-    'FTM',
-    'FTA',
-    'FT_PCT',
-    'OREB',
-    'DREB',
-    'REB',
-    'AST',
-    'STL',
-    'BLK',
-    'TOV',
-    'PF',
-    'PTS',
-    'PLUS_MINUS'
-]
-
 def main():
     playerStats = pd.read_csv(IN_DIRECTORY + 'player_stats.csv')
     teamStats = pd.read_csv(IN_DIRECTORY + 'team_stats.csv')
-    gameLogs = pd.read_csv(IN_DIRECTORY + 'game_logs.csv')
     
     # for col in playerStats.columns:
     #     print(col)
@@ -156,9 +122,6 @@ def main():
 
     teamStats = teamStats[TEAM_STATS_COLS]
     teamStats.to_csv(OUT_DIRECTORY + 'team_stats_clean.csv', index=False)
-
-    gameLogs = gameLogs[GAME_LOGS_COLS]
-    gameLogs.to_csv(OUT_DIRECTORY + 'game_logs_clean.csv', index=False)
 
 
 if __name__ == '__main__':
