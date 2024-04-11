@@ -12,17 +12,16 @@ OUT_DIRECTORY = 'data/clean/'
 def main():
     playerStats = pd.read_csv(IN_DIRECTORY + 'player_stats_clean.csv')
     teamStats = pd.read_csv(IN_DIRECTORY + 'team_stats_clean.csv')
-    gameLogs = pd.read_csv(IN_DIRECTORY + 'game_logs_clean.csv')
 
     leagueStats = get_league_stats(teamStats)
 
-    # playerStats = get_total_possessions(playerStats, teamStats)
     winShareStats = get_win_shares(playerStats, teamStats, leagueStats)
-    # playerEfficiencyRatingStats = get_player_efficiency_rating(playerStats, teamStats, leagueStats)
-    playerStats = pd.merge(playerStats, winShareStats, on=['PLAYER_ID', 'SEASON'])
-    # playerStats = pd.merge(playerStats, playerEfficiencyRatingStats, on=['PLAYER_ID', 'SEASON'])
+    playerEfficiencyRatingStats = get_player_efficiency_rating(playerStats, teamStats, leagueStats)
 
-    playerStats = playerStats[['SEASON', 'PLAYER_ID', 'PLAYER_NAME', 'WS']] # 'PER'
+    playerStats = pd.merge(playerStats, winShareStats, on=['PLAYER_ID', 'SEASON'])
+    playerStats = pd.merge(playerStats, playerEfficiencyRatingStats, on=['PLAYER_ID', 'SEASON'])
+
+    playerStats = playerStats[['SEASON', 'PLAYER_ID', 'PLAYER_NAME', 'WS', 'PER']]
 
     playerStats.to_csv(OUT_DIRECTORY + 'additional_player_stats.csv', index=False)
 
@@ -66,7 +65,7 @@ def get_win_shares(plStats, tmStats, lgStats):
     plStats['POSSESSIONS'] = 0.96 * (plStats['FGA'] + plStats['TOV'] + 0.44 * plStats['FTA'] - plStats['OREB'])
 
     # Marginal offense = (points produced) - 0.92 * (league points per possession) * (offensive possessions)
-    plStats['MARG_OFF'] = plStats['PPROD'] - 0.92 * plStats['PPP_LG'] * plStats['POSSESSIONS'] # plStats['TOT_OFF_POSS']
+    plStats['MARG_OFF'] = plStats['PPROD'] - 0.92 * plStats['PPP_LG'] * plStats['POSSESSIONS']
 
     # Marginal points per win = 0.32 * (league points per game) * ((team pace) / (league pace))
     plStats['MARG_PPW'] = 0.32 * plStats['PPG_LG'] * (plStats['PACE_TM'] / plStats['PACE_LG'])
@@ -92,7 +91,45 @@ def get_win_shares(plStats, tmStats, lgStats):
 
 # source: https://www.basketball-reference.com/about/per.html
 def get_player_efficiency_rating(plStats, tmStats, lgStats):
-    return
+    # merge all the stats we need into one dataframe
+    plStats = pd.merge(plStats, lgStats, on=['SEASON'], suffixes=['', '_LG'])
+    plStats = pd.merge(plStats, tmStats, on=['TEAM_ID', 'SEASON'], suffixes=['', '_TM'])
+    
+    # calculate unadjusted PER
+    # uPER = (1 / MP) *
+    #     [ 3P
+    #     + (2/3) * AST
+    #     + (2 - factor * (team_AST / team_FG)) * FG
+    #     + (FT *0.5 * (1 + (1 - (team_AST / team_FG)) + (2/3) * (team_AST / team_FG)))
+    #     - VOP * TOV
+    #     - VOP * DRB% * (FGA - FG)
+    #     - VOP * 0.44 * (0.44 + (0.56 * DRB%)) * (FTA - FT)
+    #     + VOP * (1 - DRB%) * (TRB - ORB)
+    #     + VOP * DRB% * ORB
+    #     + VOP * STL
+    #     + VOP * DRB% * BLK
+    #     - PF * ((lg_FT / lg_PF) - 0.44 * (lg_FTA / lg_PF) * VOP) ]
+    plStats['uPER'] = ((1 / plStats['MIN']) * (plStats['FG3M'] + (2/3) * plStats['AST'] + (2 - plStats['factor'] 
+                        * (plStats['AST_TM'] / plStats['FGM_TM'])) * plStats['FGM']
+                        + (plStats['FTM'] * 0.5 * (1 + (1 - (plStats['AST_TM'] / plStats['FGM_TM'])) + (2/3) * (plStats['AST_TM'] / plStats['FGM_TM'])))
+                        - plStats['VOP'] * plStats['TOV'] - plStats['VOP'] * plStats['DREB_PCT'] * (plStats['FGA'] - plStats['FGM'])
+                        - plStats['VOP'] * 0.44 * (0.44 + (0.56 * plStats['DREB_PCT'])) * (plStats['FTA'] - plStats['FTM'])
+                        + plStats['VOP'] * (1 - plStats['DREB_PCT']) * (plStats['REB'] - plStats['OREB'])
+                        + plStats['VOP'] * plStats['DREB_PCT'] * plStats['OREB'] 
+                        + plStats['VOP'] * plStats['STL'] + plStats['VOP'] * plStats['DREB_PCT'] * plStats['BLK']
+                        - plStats['PF'] * ((plStats['FTM_LG'] / plStats['PF_LG']) - 0.44 * (plStats['FTA_LG'] / plStats['PF_LG']) * plStats['VOP'])))
+    
+    # pace adjustment = lg_Pace / team_Pace
+    # aPER = (pace adjustment) * uPER
+    plStats['aPER'] = (plStats['PACE_LG'] / plStats['PACE_TM']) * plStats['uPER']
+    
+    # finally, calculte player efficiency rating
+    # PER = aPER * (15 / lg_aPER)
+    lg_aPER = plStats.groupby('SEASON').agg({'aPER' : 'mean'})
+    plStats = pd.merge(plStats, lg_aPER, on=['SEASON'], suffixes=['', '_LG'])
+    plStats['PER'] = plStats['aPER'] * (15 / plStats['aPER_LG'])
+
+    return plStats[['SEASON', 'PLAYER_ID', 'PER']]
 
 # source: https://www.basketball-reference.com/about/ratings.html
 def get_points_produced(plStats, tmStats):
