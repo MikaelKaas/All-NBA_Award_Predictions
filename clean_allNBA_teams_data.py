@@ -1,8 +1,8 @@
 import pandas as pd
 import unicodedata
 
-IN_DIRECTORY = 'data/'
-OUT_DIRECTORY = 'data/final/'
+IN_DIRECTORY = 'data/raw/'
+OUT_DIRECTORY = 'data/clean/'
 
 def main():
     # finalize All-NBA team award winner data
@@ -47,7 +47,7 @@ def main():
     allNBAteamsFinal = allNBAteamsFinal.rename(columns={'Season' : 'SEASON', 'Team' : 'ALL_NBA_TM'})
     allNBAteamsFinal = allNBAteamsFinal.sort_values(by=['SEASON', 'ALL_NBA_TM', 'PLAYER_NAME']).set_index('SEASON')
 
-    allNBAteamsFinal.to_csv(OUT_DIRECTORY + 'allNBA_teams_final.csv')
+    allNBAteamsFinal.to_csv(OUT_DIRECTORY + 'allNBA_teams_clean.csv')
 
 
 # remove position suffix from PLAYER_NAME column and normalize accented letters
