@@ -68,16 +68,16 @@ def main():
     playerStatsTraining = playerStatsTraining.drop(playerStatsTraining[playerStatsTraining['SEASON'] > '2021-22'].index)
     playerStatsTraining.to_csv(OUT_DIRECTORY + 'player_stats_training.csv', index=False)
 
-    # create test data (2022-23)
-    playerStatsTest2022_23 = playerStatsFinal[TRAINING_DATA_COLUMNS]
-    playerStatsTest2022_23 = playerStatsTest2022_23.drop(playerStatsTest2022_23[playerStatsTest2022_23['SEASON'] != '2022-23'].index)
-    playerStatsTest2022_23.to_csv(OUT_DIRECTORY + 'player_stats_test_2022-23.csv', index=False)
+    # save data for the 2022-23 season
+    playerStats2022_23 = playerStatsFinal[TRAINING_DATA_COLUMNS]
+    playerStats2022_23 = playerStats2022_23.drop(playerStats2022_23[playerStats2022_23['SEASON'] != '2022-23'].index)
+    playerStats2022_23.to_csv(OUT_DIRECTORY + 'player_stats_2022-23.csv', index=False)
 
-    # create test data (2023-24)
+    # save data for the 2023-24 season
     # just for fun as we won't be able to check the accuracy of predictions on this data
-    playerStatsTest2023_24 = playerStatsFinal[TRAINING_DATA_COLUMNS]
-    playerStatsTest2023_24 = playerStatsTest2023_24.drop(playerStatsTest2023_24[playerStatsTest2023_24['SEASON'] != '2023-24'].index)
-    playerStatsTest2023_24.to_csv(OUT_DIRECTORY + 'player_stats_test_2023-24.csv', index=False)
+    playerStats2023_24 = playerStatsFinal[TRAINING_DATA_COLUMNS]
+    playerStats2023_24 = playerStats2023_24.drop(playerStats2023_24[playerStats2023_24['SEASON'] != '2023-24'].index)
+    playerStats2023_24.to_csv(OUT_DIRECTORY + 'player_stats_2023-24.csv', index=False)
 
 
 
