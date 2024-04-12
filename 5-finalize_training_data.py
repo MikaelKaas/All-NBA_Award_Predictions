@@ -54,6 +54,10 @@ def main():
     playerStatsFinal = playerStatsFinal.fillna(0)
     playerStatsFinal = playerStatsFinal.sort_values(by=['SEASON', 'PLAYER_NAME'])
 
+    # # remove ineligible players 
+    # # (potential outliers for advanced stats like PIE and PER due to low extremely low sample sizes)
+    # playerStatsFinal = playerStatsFinal.loc[~((playerStatsFinal['GP'] < 5) | (playerStatsFinal['MIN'] < 100))]
+
     # convert stat totals to per game averages
     playerStatsFinal['PTS'] = playerStatsFinal['PTS'] / playerStatsFinal['GP']
     playerStatsFinal['REB'] = playerStatsFinal['REB'] / playerStatsFinal['GP']
