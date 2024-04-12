@@ -54,11 +54,17 @@ def main():
     playerStatsFinal = playerStatsFinal.fillna(0)
     playerStatsFinal = playerStatsFinal.sort_values(by=['SEASON', 'PLAYER_NAME'])
 
+    # convert stat totals to per game averages
+    playerStatsFinal['PTS'] = playerStatsFinal['PTS'] / playerStatsFinal['GP']
+    playerStatsFinal['REB'] = playerStatsFinal['REB'] / playerStatsFinal['GP']
+    playerStatsFinal['AST'] = playerStatsFinal['AST'] / playerStatsFinal['GP']
+    playerStatsFinal['STL'] = playerStatsFinal['STL'] / playerStatsFinal['GP']
+    playerStatsFinal['BLK'] = playerStatsFinal['BLK'] / playerStatsFinal['GP']
+    
     # round long floats
-    playerStatsFinal['MIN'] = playerStatsFinal['MIN'].apply(lambda x : round(x, 2))
-    playerStatsFinal['WS'] = playerStatsFinal['WS'].apply(lambda x : round(x, 2))
-    playerStatsFinal['PER'] = playerStatsFinal['PER'].apply(lambda x : round(x, 2))
-
+    playerStatsFinal[['PTS', 'REB', 'AST', 'STL', 'BLK', 'MIN', 'WS', 'PER']] = \
+        playerStatsFinal[['PTS', 'REB', 'AST', 'STL', 'BLK', 'MIN', 'WS', 'PER']].apply(lambda x : round(x, 2))
+    
 
     # save complete final data
     playerStatsFinal.to_csv(OUT_DIRECTORY + 'player_stats_final.csv', index=False)
