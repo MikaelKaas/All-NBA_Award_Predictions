@@ -54,22 +54,12 @@ def main():
     playerStatsFinal = playerStatsFinal.fillna(0)
     playerStatsFinal = playerStatsFinal.sort_values(by=['SEASON', 'PLAYER_NAME'])
 
-    # # remove ineligible players 
-    # # (potential outliers for advanced stats like PIE and PER due to low extremely low sample sizes)
+    # remove ineligible players 
+    # (potential outliers for advanced stats like PIE and PER due to low extremely low sample sizes)
     playerStatsFinal = playerStatsFinal.loc[~((playerStatsFinal['GP'] < 5) | (playerStatsFinal['MIN'] < 100))]
 
-    # # convert stat totals to per game averages
-    # playerStatsFinal['PTS'] = playerStatsFinal['PTS'] / playerStatsFinal['GP']
-    # playerStatsFinal['REB'] = playerStatsFinal['REB'] / playerStatsFinal['GP']
-    # playerStatsFinal['AST'] = playerStatsFinal['AST'] / playerStatsFinal['GP']
-    # playerStatsFinal['STL'] = playerStatsFinal['STL'] / playerStatsFinal['GP']
-    # playerStatsFinal['BLK'] = playerStatsFinal['BLK'] / playerStatsFinal['GP']
-    
     # round long floats
-    # playerStatsFinal[['PTS', 'REB', 'AST', 'STL', 'BLK', 'MIN', 'WS', 'PER']] = \
-    #     playerStatsFinal[['PTS', 'REB', 'AST', 'STL', 'BLK', 'MIN', 'WS', 'PER']].apply(lambda x : round(x, 2))
-    playerStatsFinal[['MIN', 'WS', 'PER']] = playerStatsFinal[['MIN', 'WS', 'PER']].apply(lambda x : round(x, 2))
-    
+    playerStatsFinal[['MIN', 'WS', 'PER']] = playerStatsFinal[['MIN', 'WS', 'PER']].apply(lambda x : round(x, 2))    
 
     # save complete final data
     playerStatsFinal.to_csv(OUT_DIRECTORY + 'player_stats_final.csv', index=False)

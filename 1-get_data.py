@@ -1,5 +1,5 @@
 import pandas as pd
-from nba_api.stats.endpoints import leaguegamelog, leaguedashplayerstats, leaguedashteamstats
+from nba_api.stats.endpoints import leaguedashplayerstats, leaguedashteamstats
 
 # year interval we want to collect data from (2023 means the 2023-24 season)
 FIRST_YEAR = 1996 # nba_api game logs only go back to 1996 (this is completely fine, will explain in report)
