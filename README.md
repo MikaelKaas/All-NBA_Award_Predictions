@@ -1,5 +1,5 @@
-# 353_Project
-CMPT 353 final project (single-member group: Mikael Kaas)
+# Machine Learning All-NBA Awards Predictions
+Computational Data Science final project
 
 ## Requirements
 - nba_api (https://github.com/swar/nba_api)
